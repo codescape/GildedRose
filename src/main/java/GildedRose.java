@@ -16,11 +16,11 @@ public class GildedRose {
         items.add(new Item("Conjured Mana Cake", 3, 6));
 
         printItems(0);
-        updateQuality();
+        updateAllItems();
         printItems(1);
     }
 
-    private static void updateQuality() {
+    private static void updateAllItems() {
         for (Item item : items) {
             if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
                 updateItem(item);
@@ -29,8 +29,9 @@ public class GildedRose {
     }
 
     private static void updateItem(Item item) {
-        if (("Aged Brie".equals(item.getName())) || "Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
+        if ("Aged Brie".equals(item.getName())) {
             increaseQuality(item);
+        } else if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
             increaseQualityForBackstagePasses(item);
         } else {
             reduceQuality(item);
@@ -67,6 +68,7 @@ public class GildedRose {
     }
 
     private static void increaseQualityForBackstagePasses(Item item) {
+        increaseQuality(item);
         if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
             if (item.getSellIn() < 11) {
                 increaseQuality(item);
