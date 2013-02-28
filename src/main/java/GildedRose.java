@@ -22,30 +22,28 @@ public class GildedRose {
 
     private static void updateQuality() {
         for (Item item : items) {
-            if (("Aged Brie".equals(item.getName())) || "Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
-                increaseQuality(item);
-                if (item.getQuality() < 50) {
-                    increaseQualityForBackstagePasses(item);
-                }
-            } else {
-                if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                    reduceQuality(item);
-                }
-            }
             if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                reduceSellIn(item);
+                updateItem(item);
             }
-            if (item.getSellIn() < 0) {
-                if ("Aged Brie".equals(item.getName())) {
-                    increaseQuality(item);
+        }
+    }
+
+    private static void updateItem(Item item) {
+        if (("Aged Brie".equals(item.getName())) || "Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
+            increaseQuality(item);
+            increaseQualityForBackstagePasses(item);
+        } else {
+            reduceQuality(item);
+        }
+        reduceSellIn(item);
+        if (item.getSellIn() < 0) {
+            if ("Aged Brie".equals(item.getName())) {
+                increaseQuality(item);
+            } else {
+                if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
+                    item.setQuality(item.getQuality() - item.getQuality());
                 } else {
-                    if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
-                        item.setQuality(item.getQuality() - item.getQuality());
-                    } else {
-                        if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                            reduceQuality(item);
-                        }
-                    }
+                    reduceQuality(item);
                 }
             }
         }
