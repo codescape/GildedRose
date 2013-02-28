@@ -20,46 +20,25 @@ public class GildedRose {
         printItems(1);
     }
 
-    private static void printItems(int days) {
-        System.out.println("After " + days + " days:");
+    private static void updateQuality() {
         for (Item item : items) {
-            System.out.println(String.format("%40s %5s %5s", item.getName(), item.getQuality(), item.getSellIn()));
-        }
-    }
-
-
-    public static void updateQuality() {
-        for (Item item : items) {
-            if ((!"Aged Brie".equals(item.getName())) && !"Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
+            if (("Aged Brie".equals(item.getName())) || "Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
+                increaseQuality(item);
+                if (item.getQuality() < 50) {
+                    increaseQualityForBackstagePasses(item);
+                }
+            } else {
                 if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
                     reduceQuality(item);
                 }
-            } else {
-                if (item.getQuality() < 50) {
-                    increaseQuality(item);
-
-                    if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
-                        if (item.getSellIn() < 11) {
-                            if (item.getQuality() < 50) {
-                                increaseQuality(item);
-                            }
-                        }
-
-                        if (item.getSellIn() < 6) {
-                            if (item.getQuality() < 50) {
-                                increaseQuality(item);
-                            }
-                        }
-                    }
-                }
             }
-
             if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                item.setSellIn(item.getSellIn() - 1);
+                reduceSellIn(item);
             }
-
             if (item.getSellIn() < 0) {
-                if (!"Aged Brie".equals(item.getName())) {
+                if ("Aged Brie".equals(item.getName())) {
+                    increaseQuality(item);
+                } else {
                     if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
                         item.setQuality(item.getQuality() - item.getQuality());
                     } else {
@@ -67,17 +46,38 @@ public class GildedRose {
                             reduceQuality(item);
                         }
                     }
-                } else {
-                    if (item.getQuality() < 50) {
-                        increaseQuality(item);
-                    }
                 }
             }
         }
     }
 
     private static void increaseQuality(Item item) {
-        item.setQuality(item.getQuality() + 1);
+        if (item.getQuality() < 50) {
+            item.setQuality(item.getQuality() + 1);
+        }
+    }
+
+    private static void reduceSellIn(Item item) {
+        item.setSellIn(item.getSellIn() - 1);
+    }
+
+    private static void printItems(int days) {
+        System.out.println("After " + days + " days:");
+        for (Item item : items) {
+            System.out.println(String.format("%40s %5s %5s", item.getName(), item.getQuality(), item.getSellIn()));
+        }
+    }
+
+    private static void increaseQualityForBackstagePasses(Item item) {
+        if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
+            if (item.getSellIn() < 11) {
+                increaseQuality(item);
+            }
+
+            if (item.getSellIn() < 6) {
+                increaseQuality(item);
+            }
+        }
     }
 
     private static void reduceQuality(Item item) {
