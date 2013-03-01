@@ -26,8 +26,7 @@ public class GildedRose {
     }
 
     public static void updateQuality() {
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
+        for (Item item : items) {
             if (("Aged Brie".equals(item.getName())) || "Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
                 if (item.getQuality() < 50) {
                     item.setQuality(item.getQuality() + 1);
