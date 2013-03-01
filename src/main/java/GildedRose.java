@@ -41,10 +41,8 @@ public class GildedRose {
                     }
                 }
             } else {
-                if (item.getQuality() > 0) {
-                    if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                        item.setQuality(item.getQuality() - 1);
-                    }
+                if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
+                    decreaseQuality(item);
                 }
             }
 
@@ -59,14 +57,18 @@ public class GildedRose {
                     if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
                         item.setQuality(item.getQuality() - item.getQuality());
                     } else {
-                        if (item.getQuality() > 0) {
-                            if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                                item.setQuality(item.getQuality() - 1);
-                            }
+                        if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
+                            decreaseQuality(item);
                         }
                     }
                 }
             }
+        }
+    }
+
+    private static void decreaseQuality(Item item) {
+        if (item.getQuality() > 0) {
+            item.setQuality(item.getQuality() - 1);
         }
     }
 
