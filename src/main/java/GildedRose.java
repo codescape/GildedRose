@@ -6,8 +6,6 @@ public class GildedRose {
     private static List<Item> items = null;
 
     public static void main(String[] args) {
-        System.out.println("OMGHAI!");
-
         items = new ArrayList<Item>();
         items.add(new Item("+5 Dexterity Vest", 10, 20));
         items.add(new Item("Aged Brie", 2, 0));
@@ -16,7 +14,15 @@ public class GildedRose {
         items.add(new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
         items.add(new Item("Conjured Mana Cake", 3, 6));
 
+        printItemList(0);
         updateQuality();
+    }
+
+    public static void printItemList(int days) {
+        System.out.println("Items in stock after " + days + " days:");
+        for (Item item : items) {
+            System.out.println(String.format("%45s %5s %5s", item.getName(), item.getSellIn(), item.getQuality()));
+        }
     }
 
     public static void updateQuality() {
