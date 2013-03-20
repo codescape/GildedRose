@@ -66,11 +66,6 @@ public class GildedRose {
             this.item = item;
         }
 
-        protected void decrementQuality() {
-            if (item.getQuality() > 0) {
-                item.setQuality(item.getQuality() - 1);
-            }
-        }
 
         protected void incrementQuality() {
             if (item.getQuality() < 50) {
@@ -158,6 +153,12 @@ public class GildedRose {
         protected void postDecrementSellIn() {
             if (getItem().getSellIn() < 0) {
                 decrementQuality();
+            }
+        }
+
+        private void decrementQuality() {
+            if (getItem().getQuality() > 0) {
+                getItem().setQuality(getItem().getQuality() - 1);
             }
         }
 
