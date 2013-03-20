@@ -36,46 +36,55 @@ public class GildedRose {
 
     public static void updateQuality() {
         for (Item item : items) {
-            if (("Aged Brie".equals(item.getName())) || "Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
-                incrementQuality(item);
+            updateQualityFor(item);
+        }
+    }
 
-                if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
-                    if (item.getSellIn() < 11) {
-                        incrementQuality(item);
-                    }
-
-                    if (item.getSellIn() < 6) {
-                        incrementQuality(item);
-                    }
-                }
-
-            } else {
-                if (item.getQuality() > 0) {
-                    if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                        item.setQuality(item.getQuality() - 1);
-                    }
-                }
-            }
-
-            if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                item.setSellIn(item.getSellIn() - 1);
-            }
-
-            if (item.getSellIn() < 0) {
-                if ("Aged Brie".equals(item.getName())) {
+    private static void updateQualityFor(Item item) {
+        if (hasName(item, "Aged Brie") || hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
+            incrementQuality(item);
+            if (hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
+                if (item.getSellIn() < 11) {
                     incrementQuality(item);
+                }
+                if (item.getSellIn() < 6) {
+                    incrementQuality(item);
+                }
+            }
+        } else {
+            if (!hasName(item, "Sulfuras, Hand of Ragnaros")) {
+                decrementQuality(item);
+            }
+        }
+        if (!hasName(item, "Sulfuras, Hand of Ragnaros")) {
+            decrementSellIn(item);
+        }
+        if (item.getSellIn() < 0) {
+            if (hasName(item, "Aged Brie")) {
+                incrementQuality(item);
+            } else {
+                if (hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
+                    item.setQuality(0);
                 } else {
-                    if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
-                        item.setQuality(item.getQuality() - item.getQuality());
-                    } else {
-                        if (item.getQuality() > 0) {
-                            if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
-                                item.setQuality(item.getQuality() - 1);
-                            }
-                        }
+                    if (!hasName(item, "Sulfuras, Hand of Ragnaros")) {
+                        decrementQuality(item);
                     }
                 }
             }
+        }
+    }
+
+    private static boolean hasName(Item item, String name) {
+        return name.equals(item.getName());
+    }
+
+    private static void decrementSellIn(Item item) {
+        item.setSellIn(item.getSellIn() - 1);
+    }
+
+    private static void decrementQuality(Item item) {
+        if (item.getQuality() > 0) {
+            item.setQuality(item.getQuality() - 1);
         }
     }
 
