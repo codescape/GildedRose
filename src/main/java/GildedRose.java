@@ -41,86 +41,103 @@ public class GildedRose {
     }
 
     private static void updateQualityFor(Item item) {
-        ItemUpdater updater = ItemUpdater.updaterFor(item);
-        updater.update(item);
-    }
-
-    private static boolean hasName(Item item, String name) {
-        return name.equals(item.getName());
-    }
-
-    private static void decrementQuality(Item item) {
-        if (item.getQuality() > 0) {
-            item.setQuality(item.getQuality() - 1);
-        }
-    }
-
-    private static void incrementQuality(Item item) {
-        if (item.getQuality() < 50) {
-            item.setQuality(item.getQuality() + 1);
-        }
+        ItemUpdater.updaterFor(item).update();
     }
 
     private abstract static class ItemUpdater {
 
         public static ItemUpdater updaterFor(Item item) {
             if (hasName(item, "Sulfuras, Hand of Ragnaros"))
-                return new VoidUpdater();
+                return new VoidUpdater(item);
             if (hasName(item, "Aged Brie"))
-                return new IncrementQualityUpdater();
+                return new IncrementQualityUpdater(item);
             if (hasName(item, "Backstage passes to a TAFKAL80ETC concert"))
-                return new BackstagePassesUpdater();
-            return new DecrementQualityUpdater();
+                return new BackstagePassesUpdater(item);
+            return new DecrementQualityUpdater(item);
         }
 
-        public void decrementSellIn(Item item) {
+        private static boolean hasName(Item item, String name) {
+            return name.equals(item.getName());
+        }
+
+        private Item item;
+
+        protected ItemUpdater(Item item) {
+            this.item = item;
+        }
+
+        protected void decrementQuality() {
+            if (item.getQuality() > 0) {
+                item.setQuality(item.getQuality() - 1);
+            }
+        }
+
+        protected void incrementQuality() {
+            if (item.getQuality() < 50) {
+                item.setQuality(item.getQuality() + 1);
+            }
+        }
+
+        protected void decrementSellIn() {
             item.setSellIn(item.getSellIn() - 1);
         }
 
-        public final void update(Item item) {
-            preDecrementSellIn(item);
-            decrementSellIn(item);
-            postDecrementSellIn(item);
+        public final void update() {
+            preDecrementSellIn();
+            decrementSellIn();
+            postDecrementSellIn();
         }
 
-        protected abstract void preDecrementSellIn(Item item);
+        protected abstract void preDecrementSellIn();
 
-        protected abstract void postDecrementSellIn(Item item);
+        protected abstract void postDecrementSellIn();
 
+        protected Item getItem() {
+            return item;
+        }
     }
 
     private static class BackstagePassesUpdater extends ItemUpdater {
 
+        BackstagePassesUpdater(Item item) {
+            super(item);
+        }
+
         @Override
-        protected void preDecrementSellIn(Item item) {
-            incrementQuality(item);
-            if (item.getSellIn() < 11) {
-                incrementQuality(item);
+        protected void preDecrementSellIn() {
+            incrementQuality();
+            if (getItem().getSellIn() < 11) {
+                incrementQuality();
             }
-            if (item.getSellIn() < 6) {
-                incrementQuality(item);
+            if (getItem().getSellIn() < 6) {
+                incrementQuality();
             }
         }
 
         @Override
-        protected void postDecrementSellIn(Item item) {
-            if (item.getSellIn() < 0) {
-                item.setQuality(0);
+        protected void postDecrementSellIn() {
+            if (getItem().getSellIn() < 0) {
+                getItem().setQuality(0);
             }
         }
+
     }
 
     private static class IncrementQualityUpdater extends ItemUpdater {
 
-        @Override
-        protected void preDecrementSellIn(Item item) {
-            incrementQuality(item);
+        IncrementQualityUpdater(Item item) {
+            super(item);
         }
 
         @Override
-        protected void postDecrementSellIn(Item item) {
-            if (item.getSellIn() < 0) {
-                incrementQuality(item);
+        protected void preDecrementSellIn() {
+            incrementQuality();
+        }
+
+        @Override
+        protected void postDecrementSellIn() {
+            if (getItem().getSellIn() < 0) {
+                incrementQuality();
             }
         }
 
@@ -128,15 +145,19 @@ public class GildedRose {
 
     private static class DecrementQualityUpdater extends ItemUpdater {
 
-        @Override
-        protected void preDecrementSellIn(Item item) {
-            decrementQuality(item);
+        DecrementQualityUpdater(Item item) {
+            super(item);
         }
 
         @Override
-        protected void postDecrementSellIn(Item item) {
-            if (item.getSellIn() < 0) {
-                decrementQuality(item);
+        protected void preDecrementSellIn() {
+            decrementQuality();
+        }
+
+        @Override
+        protected void postDecrementSellIn() {
+            if (getItem().getSellIn() < 0) {
+                decrementQuality();
             }
         }
 
@@ -144,18 +165,22 @@ public class GildedRose {
 
     private static class VoidUpdater extends ItemUpdater {
 
+        VoidUpdater(Item item) {
+            super(item);
+        }
+
         @Override
-        public void decrementSellIn(Item item) {
+        public void decrementSellIn() {
             // intentionally left blank
         }
 
         @Override
-        protected void preDecrementSellIn(Item item) {
+        protected void preDecrementSellIn() {
             // intentionally left blank
         }
 
         @Override
-        protected void postDecrementSellIn(Item item) {
+        protected void postDecrementSellIn() {
             // intentionally left blank
         }
 
