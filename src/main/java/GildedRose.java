@@ -71,15 +71,34 @@ public class GildedRose {
             if (hasName(item, "Sulfuras, Hand of Ragnaros"))
                 return new VoidUpdater();
             if (hasName(item, "Aged Brie"))
-                return new AgedBrieUpdater();
-            return new DefaultUpdater();
+                return new IncrementQualityUpdater();
+            if (hasName(item, "Backstage passes to a TAFKAL80ETC concert"))
+                return new BackstagePassesUpdater();
+            return new DecrementQualityUpdater();
         }
 
         public abstract void update(Item item);
 
     }
 
-    private static class AgedBrieUpdater extends ItemUpdater {
+    private static class BackstagePassesUpdater extends ItemUpdater {
+        @Override
+        public void update(Item item) {
+            incrementQuality(item);
+            if (item.getSellIn() < 11) {
+                incrementQuality(item);
+            }
+            if (item.getSellIn() < 6) {
+                incrementQuality(item);
+            }
+            decrementSellIn(item);
+            if (item.getSellIn() < 0) {
+                item.setQuality(0);
+            }
+        }
+    }
+
+    private static class IncrementQualityUpdater extends ItemUpdater {
 
         @Override
         public void update(Item item) {
@@ -92,28 +111,14 @@ public class GildedRose {
 
     }
 
-    private static class DefaultUpdater extends ItemUpdater {
+    private static class DecrementQualityUpdater extends ItemUpdater {
 
         @Override
         public void update(Item item) {
-            if (hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
-                incrementQuality(item);
-                if (item.getSellIn() < 11) {
-                    incrementQuality(item);
-                }
-                if (item.getSellIn() < 6) {
-                    incrementQuality(item);
-                }
-            } else {
-                decrementQuality(item);
-            }
+            decrementQuality(item);
             decrementSellIn(item);
             if (item.getSellIn() < 0) {
-                if (hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
-                    item.setQuality(0);
-                } else {
-                    decrementQuality(item);
-                }
+                decrementQuality(item);
             }
         }
     }
