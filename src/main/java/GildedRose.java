@@ -41,37 +41,8 @@ public class GildedRose {
     }
 
     private static void updateQualityFor(Item item) {
-        if (hasName(item, "Aged Brie") || hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
-            incrementQuality(item);
-            if (hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
-                if (item.getSellIn() < 11) {
-                    incrementQuality(item);
-                }
-                if (item.getSellIn() < 6) {
-                    incrementQuality(item);
-                }
-            }
-        } else {
-            if (!hasName(item, "Sulfuras, Hand of Ragnaros")) {
-                decrementQuality(item);
-            }
-        }
-        if (!hasName(item, "Sulfuras, Hand of Ragnaros")) {
-            decrementSellIn(item);
-        }
-        if (item.getSellIn() < 0) {
-            if (hasName(item, "Aged Brie")) {
-                incrementQuality(item);
-            } else {
-                if (hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
-                    item.setQuality(0);
-                } else {
-                    if (!hasName(item, "Sulfuras, Hand of Ragnaros")) {
-                        decrementQuality(item);
-                    }
-                }
-            }
-        }
+        ItemUpdater updater = ItemUpdater.updaterFor(item);
+        updater.update(item);
     }
 
     private static boolean hasName(Item item, String name) {
@@ -94,4 +65,46 @@ public class GildedRose {
         }
     }
 
+    private abstract static class ItemUpdater {
+
+        public static ItemUpdater updaterFor(Item item) {
+            return new DefaultUpdater();
+        }
+
+        public abstract void update(Item item);
+
+    }
+
+    private static class DefaultUpdater extends ItemUpdater {
+        @Override
+        public void update(Item item) {
+            if (hasName(item, "Sulfuras, Hand of Ragnaros"))
+                return;
+            if (hasName(item, "Aged Brie") || hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
+                incrementQuality(item);
+                if (hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
+                    if (item.getSellIn() < 11) {
+                        incrementQuality(item);
+                    }
+                    if (item.getSellIn() < 6) {
+                        incrementQuality(item);
+                    }
+                }
+            } else {
+                decrementQuality(item);
+            }
+            decrementSellIn(item);
+            if (item.getSellIn() < 0) {
+                if (hasName(item, "Aged Brie")) {
+                    incrementQuality(item);
+                } else {
+                    if (hasName(item, "Backstage passes to a TAFKAL80ETC concert")) {
+                        item.setQuality(0);
+                    } else {
+                        decrementQuality(item);
+                    }
+                }
+            }
+        }
+    }
 }
