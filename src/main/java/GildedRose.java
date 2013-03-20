@@ -1,5 +1,4 @@
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,17 +38,17 @@ public class GildedRose {
         for (Item item : items) {
             if (("Aged Brie".equals(item.getName())) || "Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
                 incrementQuality(item);
-                if (item.getQuality() < 50) {
-                    if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
-                        if (item.getSellIn() < 11) {
-                            incrementQuality(item);
-                        }
 
-                        if (item.getSellIn() < 6) {
-                            incrementQuality(item);
-                        }
+                if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
+                    if (item.getSellIn() < 11) {
+                        incrementQuality(item);
+                    }
+
+                    if (item.getSellIn() < 6) {
+                        incrementQuality(item);
                     }
                 }
+
             } else {
                 if (item.getQuality() > 0) {
                     if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
