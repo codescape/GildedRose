@@ -24,9 +24,7 @@ public class GildedRose {
     }
 
     public static void printListTo(PrintStream out) {
-        for (Item item : items) {
-            printItemTo(item, out);
-        }
+        for (Item item : items) printItemTo(item, out);
         out.println();
     }
 
@@ -35,9 +33,7 @@ public class GildedRose {
     }
 
     public static void updateQuality() {
-        for (Item item : items) {
-            updateQualityFor(item);
-        }
+        for (Item item : items) updateQualityFor(item);
     }
 
     private static void updateQualityFor(Item item) {
@@ -68,9 +64,7 @@ public class GildedRose {
 
 
         protected void incrementQuality() {
-            if (item.getQuality() < 50) {
-                item.setQuality(item.getQuality() + 1);
-            }
+            if (item.getQuality() < 50) item.setQuality(item.getQuality() + 1);
         }
 
         protected void decrementSellIn() {
@@ -101,19 +95,13 @@ public class GildedRose {
         @Override
         protected void preDecrementSellIn() {
             incrementQuality();
-            if (getItem().getSellIn() < 11) {
-                incrementQuality();
-            }
-            if (getItem().getSellIn() < 6) {
-                incrementQuality();
-            }
+            if (getItem().getSellIn() < 11) incrementQuality();
+            if (getItem().getSellIn() < 6) incrementQuality();
         }
 
         @Override
         protected void postDecrementSellIn() {
-            if (getItem().getSellIn() < 0) {
-                getItem().setQuality(0);
-            }
+            if (getItem().getSellIn() < 0) getItem().setQuality(0);
         }
 
     }
@@ -131,9 +119,7 @@ public class GildedRose {
 
         @Override
         protected void postDecrementSellIn() {
-            if (getItem().getSellIn() < 0) {
-                incrementQuality();
-            }
+            if (getItem().getSellIn() < 0) incrementQuality();
         }
 
     }
@@ -151,15 +137,11 @@ public class GildedRose {
 
         @Override
         protected void postDecrementSellIn() {
-            if (getItem().getSellIn() < 0) {
-                decrementQuality();
-            }
+            if (getItem().getSellIn() < 0) decrementQuality();
         }
 
         private void decrementQuality() {
-            if (getItem().getQuality() > 0) {
-                getItem().setQuality(getItem().getQuality() - 1);
-            }
+            if (getItem().getQuality() > 0) getItem().setQuality(getItem().getQuality() - 1);
         }
 
     }
