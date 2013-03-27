@@ -1,13 +1,24 @@
 
 public class ItemUpdater {
 
-    static void updateQualityFor(Item item) {
-        updateQualityBeforeUpdatingSellInFor(item);
-        updateSellIn(item);
-        updateQualityAfterUpdatingSellIn(item);
+    private Item item;
+
+    public ItemUpdater(Item item) {
+        this.item = item;
     }
 
-    private static void updateQualityAfterUpdatingSellIn(Item item) {
+    static void updateQualityFor(Item item) {
+        ItemUpdater itemUpdater = getItemUpdaterFor(item);
+        itemUpdater.updateQualityBeforeUpdatingSellInFor(item);
+        itemUpdater.updateSellIn(item);
+        itemUpdater.updateQualityAfterUpdatingSellIn(item);
+    }
+
+    private static ItemUpdater getItemUpdaterFor(Item item) {
+        return new ItemUpdater(item);
+    }
+
+    private void updateQualityAfterUpdatingSellIn(Item item) {
         if (item.getSellIn() < 0) {
             if ("Aged Brie".equals(item.getName())) {
                 increaseQuality(item);
@@ -25,13 +36,13 @@ public class ItemUpdater {
         }
     }
 
-    private static void updateSellIn(Item item) {
+    private void updateSellIn(Item item) {
         if (!"Sulfuras, Hand of Ragnaros".equals(item.getName())) {
             reduceSellIn(item);
         }
     }
 
-    private static void updateQualityBeforeUpdatingSellInFor(Item item) {
+    private void updateQualityBeforeUpdatingSellInFor(Item item) {
         if (("Aged Brie".equals(item.getName())) || "Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
             increaseQuality(item);
             if ("Backstage passes to a TAFKAL80ETC concert".equals(item.getName())) {
@@ -52,15 +63,15 @@ public class ItemUpdater {
         }
     }
 
-    private static void reduceQuality(Item item) {
+    private void reduceQuality(Item item) {
         item.setQuality(item.getQuality() - 1);
     }
 
-    private static void reduceSellIn(Item item) {
+    private void reduceSellIn(Item item) {
         item.setSellIn(item.getSellIn() - 1);
     }
 
-    private static void increaseQuality(Item item) {
+    private void increaseQuality(Item item) {
         if (item.getQuality() < 50) {
             item.setQuality(item.getQuality() + 1);
         }
